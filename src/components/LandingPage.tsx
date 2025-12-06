@@ -72,6 +72,9 @@ export function LandingPage({ onNavigate, isDarkMode, toggleDarkMode }: LandingP
             : 'bg-gradient-to-b from-[#FAFAFA] via-[#F5F5F7] to-[#FAFAFA]'
         }`} />
 
+        {/* New blinking dot pattern */}
+        <BackgroundDotPattern isDarkMode={isDarkMode} />
+
         {/* Minimal floating dots - 40px away from content */}
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -90,7 +93,7 @@ export function LandingPage({ onNavigate, isDarkMode, toggleDarkMode }: LandingP
             transition={{
               duration: 4 + i * 0.5,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: 'easeInOut',
               delay: i * 0.2
             }}
           />
@@ -145,21 +148,20 @@ export function LandingPage({ onNavigate, isDarkMode, toggleDarkMode }: LandingP
               transition={{ duration: 0.4, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="hero-cta-spacing"
             >
-<motion.button
-  onClick={() => onNavigate('dashboard')}
-  className={`btn-primary inline-flex items-center gap-2 ${
-    isDarkMode 
-      ? 'bg-black text-white hover:bg-black/90'
-      : 'bg-white text-black hover:bg-white/90'
-  }`}
-  whileHover={{ y: -1 }}
-  whileTap={{ scale: 0.98 }}
-  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
->
-  <span>Go to Dashboard</span>
-  <ArrowRight size={16} strokeWidth={1.5} />
-</motion.button>
-
+              <motion.button
+                onClick={() => onNavigate('dashboard')}
+                className={`btn-primary inline-flex items-center gap-2 ${
+                  isDarkMode 
+                    ? 'bg-black text-white hover:bg-black/90'
+                    : 'bg-white text-black hover:bg-white/90'
+                }`}
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span>Go to Dashboard</span>
+                <ArrowRight size={16} strokeWidth={1.5} />
+              </motion.button>
             </motion.div>
           </div>
         </div>
@@ -333,5 +335,43 @@ function InfoCard({ icon, title, description, isDarkMode, delay }: any) {
         {description}
       </p>
     </motion.div>
+  );
+}
+
+// Smooth blinking dot pattern in background
+function BackgroundDotPattern({ isDarkMode }: { isDarkMode: boolean }) {
+  const baseColour = isDarkMode
+    ? 'rgba(255,255,255,0.08)'
+    : 'rgba(0,0,0,0.08)';
+
+  return (
+    <>
+      {/* Main soft blinking grid */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, ${baseColour} 1px, transparent 0)`,
+          backgroundSize: '26px 26px'
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.12, 0.28, 0.18] }}
+        transition={{ duration: 6, repeat: Infinity, ease: [0.22, 1, 0.36, 1] }}
+      />
+
+      {/* Second layer for subtle parallax and variation */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, ${baseColour} 1px, transparent 0)`,
+          backgroundSize: '32px 32px'
+        }}
+        animate={{
+          opacity: [0.06, 0.2, 0.1],
+          x: [-6, 0, 6, 0],
+          y: [3, -3, 3]
+        }}
+        transition={{ duration: 9, repeat: Infinity, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </>
   );
 }
